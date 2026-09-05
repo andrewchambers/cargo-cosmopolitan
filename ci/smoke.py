@@ -14,6 +14,7 @@ def main():
     machine = platform.machine().lower()
     arch = {"amd64": "x86_64", "x86_64": "x86_64", "arm64": "aarch64", "aarch64": "aarch64"}[machine]
     greeting = "CI with spaces"
+    failures = []
     for name in VARIANTS:
         path = directory / f"{name}.com"
         if not path.is_file():
@@ -34,10 +35,13 @@ def main():
             print(stderr, file=sys.stderr, flush=True)
         expected = [f"hello from {greeting}", f"architecture: {arch}", f"pthread: {str(name != 'no-pthread').lower()}"]
         if result.returncode != 0 or any(line not in stdout.splitlines() for line in expected):
-            raise RuntimeError(f"{name}: incorrect exit status, output, or selected architecture")
+            failures.append(f"{name}: incorrect exit status, output, or selected architecture")
+            continue
         message = "computed 42 without pthreads" if name == "no-pthread" else "a pthread computed 42"
         if f"{message} (through a pipe)" not in stdout or not re.search(r"^Unix time: [1-9][0-9]{9,}$", stdout, re.M):
-            raise RuntimeError(f"{name}: missing pipe or clock result")
+            failures.append(f"{name}: missing pipe or clock result")
+    if failures:
+        raise RuntimeError("; ".join(failures))
 
 
 if __name__ == "__main__":

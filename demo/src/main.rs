@@ -21,9 +21,12 @@ fn demo(args: Args<'_>) -> Result<(), Errno> {
         lunacy::open(c"", OpenFlags::rdonly(), Mode::empty()).err(),
         Some(Errno::ENOENT)
     );
+    lunacy::eprintln!("errno checked")?;
     #[cfg(feature = "pthread")]
     let message = pthread::spawn(|| {
+        lunacy::eprintln!("thread entered").unwrap();
         let value = pthread::Mutex::new(41_u32).unwrap();
+        lunacy::eprintln!("mutex initialized").unwrap();
         *value.lock().unwrap() += 1;
         alloc::format!("a pthread computed {}", *value.lock().unwrap())
     })?
@@ -31,6 +34,7 @@ fn demo(args: Args<'_>) -> Result<(), Errno> {
     #[cfg(not(feature = "pthread"))]
     let message = alloc::format!("computed {} without pthreads", 42);
 
+    lunacy::eprintln!("thread joined")?;
     let (reader, writer) = lunacy::pipe()?;
     let bytes = message.as_bytes();
     assert_eq!(lunacy::write(writer.as_fd(), bytes)?, bytes.len());
