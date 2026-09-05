@@ -41,6 +41,19 @@ JSON target schema is unstable; overriding the nightly can require changes to
 the generated specification. Runtime validation uses the distributed APE itself,
 not only intermediate ELF images or successful structural checks.
 
+### Tiny pthreads on Intel macOS
+
+Cosmopolitan 4.0.2's `-mtiny` runtime receives `SIGSYS` during the pthread test on
+Intel macOS 15. A plain C program built directly with `cosmocc -mtiny` reproduces
+it, independently of this driver's Rust targets, linker adapter, and lunacy.
+Debug, ordinary release, and LTO/strip builds pass on the same runner.
+
+CI retains both programs. It accepts this known failure only on Intel macOS,
+only with `SIGSYS` in both, and emits a warning and job summary. Other failures
+remain fatal. Use the default Cosmopolitan runtime when targeting Intel macOS.
+The [reproduction run](https://github.com/andrewchambers/cargo-cosmopolitan/actions/runs/33943681395)
+and [C probe](../ci/pthread-probe.c) record the evidence.
+
 References:
 
 - [Cosmopolitan compiler drivers](https://github.com/jart/cosmopolitan/tree/master/tool/cosmocc)
