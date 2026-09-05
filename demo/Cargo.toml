@@ -1,0 +1,21 @@
+[package]
+name = "cosmo-demo"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[features]
+default = ["pthread"]
+pthread = ["lunacy/pthread"]
+
+[dependencies]
+lunacy = { version = "0.1.0", default-features = false }
+
+[workspace]
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+opt-level = "s"
