@@ -20,6 +20,7 @@ VARIANTS = {
 def main():
     output = Path("artifacts")
     output.mkdir(exist_ok=True)
+    subprocess.run(["cosmocc", "-mtiny", "ci/pthread-probe.c", "-o", str(output / "c-tiny.com")], check=True)
     for name, (args, settings) in VARIANTS.items():
         env = dict(os.environ)
         for key in ("CARGO_PROFILE_RELEASE_LTO", "CARGO_PROFILE_RELEASE_CODEGEN_UNITS", "CARGO_PROFILE_RELEASE_STRIP"):

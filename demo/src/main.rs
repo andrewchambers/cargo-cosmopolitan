@@ -28,7 +28,10 @@ fn demo(args: Args<'_>) -> Result<(), Errno> {
         let value = pthread::Mutex::new(41_u32).unwrap();
         lunacy::eprintln!("mutex initialized").unwrap();
         *value.lock().unwrap() += 1;
-        alloc::format!("a pthread computed {}", *value.lock().unwrap())
+        lunacy::eprintln!("mutex incremented").unwrap();
+        let message = alloc::format!("a pthread computed {}", *value.lock().unwrap());
+        lunacy::eprintln!("message formatted").unwrap();
+        message
     })?
     .join()?;
     #[cfg(not(feature = "pthread"))]

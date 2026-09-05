@@ -6,7 +6,7 @@ import re
 import subprocess
 import sys
 
-VARIANTS = ("debug", "release", "tiny", "optimized", "no-pthread")
+VARIANTS = ("debug", "release", "tiny", "optimized", "no-pthread", "c-tiny")
 
 
 def main():
@@ -33,6 +33,10 @@ def main():
         print(stdout, end="", flush=True)
         if stderr:
             print(stderr, file=sys.stderr, flush=True)
+        if name == "c-tiny":
+            if result.returncode != 0:
+                failures.append(f"upstream C tiny pthread probe: exit {result.returncode}")
+            continue
         expected = [f"hello from {greeting}", f"architecture: {arch}", f"pthread: {str(name != 'no-pthread').lower()}"]
         if result.returncode != 0 or any(line not in stdout.splitlines() for line in expected):
             failures.append(f"{name}: incorrect exit status, output, or selected architecture")
