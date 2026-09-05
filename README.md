@@ -38,9 +38,6 @@ cargo cosmopolitan run --release -- arguments
 `--tiny` selects Cosmopolitan's smaller runtime. Output goes into
 `target/cosmopolitan/{debug,release}/<name>.com`.
 
-With Cosmopolitan 4.0.2, tiny pthread programs crash on Intel macOS 15.
-Use the default runtime for programs that need to run there.
-
 From this repository, try the standalone demo:
 
 ```sh
@@ -55,8 +52,8 @@ Full Rust `std` and native Rust TLS are not supported.
 ## CI
 
 Driver tests run with Rust 1.85 and stable; stable also checks formatting and
-Clippy. A Linux x86-64 job builds debug, release, tiny, LTO/one-codegen-unit/strip,
-and pthread-disabled configurations. The same five APEs are then executed on:
+Clippy. A Linux x86-64 job builds debug, release, LTO/one-codegen-unit/strip,
+and pthread-disabled configurations. The same four APEs are then executed on:
 
 - Linux x86-64 and ARM64
 - macOS Intel and ARM64
@@ -64,9 +61,7 @@ and pthread-disabled configurations. The same five APEs are then executed on:
 
 Runtime jobs check the selected architecture, exit status, and demo output.
 They do not rebuild the application. See the [workflow](.github/workflows/ci.yml)
-for the current checks and their results via the badge above. The Intel macOS
-tiny/pthread case is an explicit expected failure, accepted only when a plain C
-probe reproduces the same `SIGSYS`; CI reports it as a warning.
+for the current checks and their results via the badge above.
 
 ```sh
 cargo test --locked
