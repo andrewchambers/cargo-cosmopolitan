@@ -16,7 +16,8 @@ and add its `bin` directory to `PATH`. Then:
 
 ```sh
 rustup toolchain install nightly-2026-01-21 --profile minimal --component rust-src
-cargo install --git https://github.com/andrewchambers/cargo-cosmopolitan --locked
+cargo install --git https://github.com/andrewchambers/cargo-cosmopolitan \
+  cargo-cosmopolitan --locked
 cargo cosmopolitan preflight
 ```
 
